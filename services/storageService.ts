@@ -36,13 +36,42 @@ const seedData = () => {
 
 seedData();
 
+// In-memory cache
+let cachedBooks: Book[] | null = null;
+let cachedMembers: Member[] | null = null;
+let cachedLoans: Loan[] | null = null;
+
 export const StorageService = {
-  getBooks: (): Book[] => JSON.parse(localStorage.getItem(KEYS.BOOKS) || '[]'),
-  saveBooks: (books: Book[]) => localStorage.setItem(KEYS.BOOKS, JSON.stringify(books)),
+  getBooks: (): Book[] => {
+    if (!cachedBooks) {
+      cachedBooks = JSON.parse(localStorage.getItem(KEYS.BOOKS) || '[]');
+    }
+    return cachedBooks!;
+  },
+  saveBooks: (books: Book[]) => {
+    cachedBooks = books;
+    localStorage.setItem(KEYS.BOOKS, JSON.stringify(books));
+  },
 
-  getMembers: (): Member[] => JSON.parse(localStorage.getItem(KEYS.MEMBERS) || '[]'),
-  saveMembers: (members: Member[]) => localStorage.setItem(KEYS.MEMBERS, JSON.stringify(members)),
+  getMembers: (): Member[] => {
+    if (!cachedMembers) {
+      cachedMembers = JSON.parse(localStorage.getItem(KEYS.MEMBERS) || '[]');
+    }
+    return cachedMembers!;
+  },
+  saveMembers: (members: Member[]) => {
+    cachedMembers = members;
+    localStorage.setItem(KEYS.MEMBERS, JSON.stringify(members));
+  },
 
-  getLoans: (): Loan[] => JSON.parse(localStorage.getItem(KEYS.LOANS) || '[]'),
-  saveLoans: (loans: Loan[]) => localStorage.setItem(KEYS.LOANS, JSON.stringify(loans)),
+  getLoans: (): Loan[] => {
+    if (!cachedLoans) {
+      cachedLoans = JSON.parse(localStorage.getItem(KEYS.LOANS) || '[]');
+    }
+    return cachedLoans!;
+  },
+  saveLoans: (loans: Loan[]) => {
+    cachedLoans = loans;
+    localStorage.setItem(KEYS.LOANS, JSON.stringify(loans));
+  },
 };
