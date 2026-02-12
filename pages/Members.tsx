@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StorageService } from '../services/storageService';
 import { Member } from '../types';
-import { Plus, Search, Trash2, Printer, X, CreditCard } from 'lucide-react';
+import { Plus, Search, Trash2, Printer, CreditCard } from 'lucide-react';
+import { Modal } from '../components/Modal';
 
 const Members: React.FC = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -128,63 +129,59 @@ const Members: React.FC = () => {
       </div>
 
       {/* Add Member Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-              <h3 className="text-lg font-bold text-slate-800">Registrasi Anggota</h3>
-              <button onClick={() => setIsModalOpen(false)}><X className="w-5 h-5 text-slate-400" /></button>
-            </div>
-            <form onSubmit={handleSave} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">NIM / NIDN (ID)</label>
-                <input required type="text" className="w-full border border-slate-300 rounded-lg p-2" 
-                  value={formData.id} onChange={e => setFormData({...formData, id: e.target.value})} placeholder="Contoh: MHS2024001" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
-                <input required type="text" className="w-full border border-slate-300 rounded-lg p-2" 
-                  value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Tipe Keanggotaan</label>
-                <select className="w-full border border-slate-300 rounded-lg p-2"
-                  value={formData.type} onChange={e => setFormData({...formData, type: e.target.value as any})}>
-                  <option value="Mahasiswa">Mahasiswa</option>
-                  <option value="Dosen">Dosen</option>
-                  <option value="Staff">Staff</option>
-                </select>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                  <input required type="email" className="w-full border border-slate-300 rounded-lg p-2" 
-                    value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
-                </div>
-                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">No. HP</label>
-                  <input required type="text" className="w-full border border-slate-300 rounded-lg p-2" 
-                    value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
-                </div>
-              </div>
-              <div className="pt-4 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
-                <button type="submit" className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700">Daftar</button>
-              </div>
-            </form>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Registrasi Anggota"
+      >
+        <form onSubmit={handleSave} className="p-6 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">NIM / NIDN (ID)</label>
+            <input required type="text" className="w-full border border-slate-300 rounded-lg p-2"
+              value={formData.id} onChange={e => setFormData({...formData, id: e.target.value})} placeholder="Contoh: MHS2024001" />
           </div>
-        </div>
-      )}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+            <input required type="text" className="w-full border border-slate-300 rounded-lg p-2"
+              value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Tipe Keanggotaan</label>
+            <select className="w-full border border-slate-300 rounded-lg p-2"
+              value={formData.type} onChange={e => setFormData({...formData, type: e.target.value as any})}>
+              <option value="Mahasiswa">Mahasiswa</option>
+              <option value="Dosen">Dosen</option>
+              <option value="Staff">Staff</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+              <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+              <input required type="email" className="w-full border border-slate-300 rounded-lg p-2"
+                value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+            </div>
+              <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">No. HP</label>
+              <input required type="text" className="w-full border border-slate-300 rounded-lg p-2"
+                value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+            </div>
+          </div>
+          <div className="pt-4 flex justify-end space-x-2">
+            <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+            <button type="submit" className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700">Daftar</button>
+          </div>
+        </form>
+      </Modal>
 
       {/* Print Card Modal */}
       {printMember && (
-        <div className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl overflow-hidden w-full max-w-lg">
-             <div className="p-4 border-b flex justify-between items-center no-print">
-                <h3 className="font-bold">Pratinjau Kartu Anggota</h3>
-                <button onClick={() => setPrintMember(null)}><X className="w-5 h-5" /></button>
-             </div>
-             
+        <Modal
+          isOpen={!!printMember}
+          onClose={() => setPrintMember(null)}
+          title="Pratinjau Kartu Anggota"
+          maxWidth="max-w-lg"
+          headerClassName="p-4 no-print"
+        >
              <div className="p-8 bg-slate-100 flex justify-center">
                 {/* The Card Component */}
                 <div id="member-card" className="w-[400px] h-[250px] bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200 relative print-only block">
@@ -232,8 +229,7 @@ const Members: React.FC = () => {
                     <Printer className="w-4 h-4 mr-2" /> Cetak Kartu
                 </button>
              </div>
-          </div>
-        </div>
+        </Modal>
       )}
     </div>
   );
