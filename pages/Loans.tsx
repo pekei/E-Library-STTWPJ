@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StorageService } from '../services/storageService';
 import { Book, Member, Loan } from '../types';
 import { Plus, CheckCircle, Clock, AlertTriangle, RotateCcw } from 'lucide-react';
+import { Modal } from '../components/Modal';
 
 const Loans: React.FC = () => {
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -177,35 +178,32 @@ const Loans: React.FC = () => {
       </div>
 
       {/* New Loan Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
-            <div className="p-6 border-b">
-              <h3 className="text-lg font-bold">Transaksi Peminjaman Baru</h3>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Transaksi Peminjaman Baru"
+      >
+        <form onSubmit={handleCreateLoan} className="p-6 space-y-4">
+            <div>
+                <label className="block text-sm font-medium mb-1">Pilih Anggota</label>
+                <select required className="w-full border p-2 rounded-lg" value={selectedMember} onChange={e => setSelectedMember(e.target.value)}>
+                <option value="">-- Cari Anggota --</option>
+                {members.map(m => <option key={m.id} value={m.id}>{m.name} ({m.id})</option>)}
+                </select>
             </div>
-            <form onSubmit={handleCreateLoan} className="p-6 space-y-4">
-               <div>
-                 <label className="block text-sm font-medium mb-1">Pilih Anggota</label>
-                 <select required className="w-full border p-2 rounded-lg" value={selectedMember} onChange={e => setSelectedMember(e.target.value)}>
-                    <option value="">-- Cari Anggota --</option>
-                    {members.map(m => <option key={m.id} value={m.id}>{m.name} ({m.id})</option>)}
-                 </select>
-               </div>
-               <div>
-                 <label className="block text-sm font-medium mb-1">Pilih Buku</label>
-                 <select required className="w-full border p-2 rounded-lg" value={selectedBook} onChange={e => setSelectedBook(e.target.value)}>
-                    <option value="">-- Cari Buku --</option>
-                    {books.filter(b => b.available > 0).map(b => <option key={b.id} value={b.id}>{b.title} (Sisa: {b.available})</option>)}
-                 </select>
-               </div>
-               <div className="pt-4 flex justify-end space-x-2">
-                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-slate-600">Batal</button>
-                 <button type="submit" className="px-4 py-2 bg-brand-600 text-white rounded-lg">Proses Peminjaman</button>
-               </div>
-            </form>
-          </div>
-        </div>
-      )}
+            <div>
+                <label className="block text-sm font-medium mb-1">Pilih Buku</label>
+                <select required className="w-full border p-2 rounded-lg" value={selectedBook} onChange={e => setSelectedBook(e.target.value)}>
+                <option value="">-- Cari Buku --</option>
+                {books.filter(b => b.available > 0).map(b => <option key={b.id} value={b.id}>{b.title} (Sisa: {b.available})</option>)}
+                </select>
+            </div>
+            <div className="pt-4 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-slate-600">Batal</button>
+                <button type="submit" className="px-4 py-2 bg-brand-600 text-white rounded-lg">Proses Peminjaman</button>
+            </div>
+        </form>
+      </Modal>
     </div>
   );
 };
