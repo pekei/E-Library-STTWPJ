@@ -4,21 +4,21 @@ const apiKey = process.env.API_KEY || '';
 const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 export const GeminiService = {
-  askLibrarian: async (query: string): Promise<string> => {
+  askAssistant: async (query: string): Promise<string> => {
     if (!ai) return "API Key konfigurasi belum dipasang. Harap hubungi administrator.";
 
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.0-flash',
         contents: query,
         config: {
-          systemInstruction: "Anda adalah asisten pustakawan profesional di Sekolah Tinggi Teologi (STT) Walter Post Jayapura. Jawablah pertanyaan terkait rekomendasi buku teologi, ringkasan topik alkitabiah, atau bantuan administrasi perpustakaan dengan sopan, akademis, dan membantu.",
+          systemInstruction: "Anda adalah asisten gereja profesional untuk Sistem Informasi Manajemen Gereja (SIM-GEREJA). Anda membantu Pendeta, Majelis, dan Staff dalam hal administrasi gereja, penyiapan materi khotbah, manajemen keuangan gereja, ide kegiatan jemaat, dan konseling dasar. Jawablah dengan sopan, penuh kasih, dan sesuai dengan nilai-nilai Kristiani.",
         }
       });
       return response.text || "Maaf, saya tidak dapat memproses permintaan saat ini.";
     } catch (error) {
       console.error("Gemini Error:", error);
-      return "Terjadi kesalahan saat menghubungkan ke AI Librarian.";
+      return "Terjadi kesalahan saat menghubungkan ke AI Assistant.";
     }
   }
 };
