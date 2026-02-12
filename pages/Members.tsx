@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StorageService } from '../services/storageService';
 import { Member } from '../types';
 import { Plus, Search, Trash2, Printer, X, CreditCard } from 'lucide-react';
+import { validateMemberName } from '../utils/validators';
 
 const Members: React.FC = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -25,6 +26,12 @@ const Members: React.FC = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(newMember.email)) {
         alert("Format email tidak valid! Harap gunakan format email yang benar (contoh: nama@domain.com).");
+        return;
+    }
+
+    // Validate Name
+    if (!validateMemberName(newMember.name)) {
+        alert("Nama anggota tidak valid! Gunakan hanya huruf, angka, spasi, titik, koma, dan tanda baca umum lainnya.");
         return;
     }
 
