@@ -1,48 +1,48 @@
-import { Book, Member, Loan, Category } from '../types';
+import { CongregationMember, FinanceRecord, Event, MemberStatus, FinanceType, FinanceCategory, EventType } from '../types';
 
 const KEYS = {
-  BOOKS: 'stt_library_books',
-  MEMBERS: 'stt_library_members',
-  LOANS: 'stt_library_loans',
+  MEMBERS: 'sim_gereja_members',
+  FINANCE: 'sim_gereja_finance',
+  EVENTS: 'sim_gereja_events',
 };
 
 // Seed Data if empty
 const seedData = () => {
-  if (!localStorage.getItem(KEYS.BOOKS)) {
-    const books: Book[] = [
-      { id: '1', isbn: '978-0123456789', title: 'Sistematika Teologi Vol 1', author: 'Louis Berkhof', publisher: 'Momentum', year: 2010, category: Category.THEOLOGY, stock: 5, available: 4 },
-      { id: '2', isbn: '978-9876543210', title: 'Tafsir Injil Matius', author: 'Matthew Henry', publisher: 'BPK Gunung Mulia', year: 2005, category: Category.BIBLICAL_STUDIES, stock: 3, available: 3 },
-      { id: '3', isbn: '978-1122334455', title: 'Sejarah Gereja Asia', author: 'Dr. Anne R', publisher: 'Kanisius', year: 2018, category: Category.HISTORY, stock: 2, available: 1 },
-    ];
-    localStorage.setItem(KEYS.BOOKS, JSON.stringify(books));
-  }
-
   if (!localStorage.getItem(KEYS.MEMBERS)) {
-    const members: Member[] = [
-      { id: 'MHS2023001', name: 'Yohanes Papare', type: 'Mahasiswa', email: 'yohanes@stt.ac.id', phone: '08123456789', joinDate: '2023-08-01' },
-      { id: 'DSN001', name: 'Dr. Paulus W', type: 'Dosen', email: 'paulus@stt.ac.id', phone: '08129876543', joinDate: '2020-01-15' },
+    const members: CongregationMember[] = [
+      { id: 'J001', name: 'Yohanes Papare', gender: 'Laki-laki', birthDate: '1980-05-15', address: 'Jl. Sentani No. 10', phone: '08123456789', status: MemberStatus.ACTIVE, joinDate: '2010-01-01', baptismDate: '2010-12-25' },
+      { id: 'J002', name: 'Maria Wally', gender: 'Perempuan', birthDate: '1985-08-20', address: 'Jl. Abepura No. 5', phone: '08129876543', status: MemberStatus.ACTIVE, joinDate: '2012-03-15' },
+      { id: 'J003', name: 'Petrus Wenda', gender: 'Laki-laki', birthDate: '1995-11-10', address: 'Jl. Waena No. 12', phone: '082133445566', status: MemberStatus.SYMPATHIZER, joinDate: '2023-01-10' },
     ];
     localStorage.setItem(KEYS.MEMBERS, JSON.stringify(members));
   }
+
+  if (!localStorage.getItem(KEYS.FINANCE)) {
+    const finance: FinanceRecord[] = [
+      { id: 'F001', date: new Date().toISOString().split('T')[0], type: FinanceType.INCOME, category: FinanceCategory.OFFERING_WEEKLY, amount: 5000000, description: 'Persembahan Minggu I', recordedBy: 'Bendahara' },
+      { id: 'F002', date: new Date().toISOString().split('T')[0], type: FinanceType.EXPENSE, category: FinanceCategory.OPERATIONAL, amount: 1500000, description: 'Bayar Listrik & Air', recordedBy: 'Bendahara' },
+    ];
+    localStorage.setItem(KEYS.FINANCE, JSON.stringify(finance));
+  }
   
-  if (!localStorage.getItem(KEYS.LOANS)) {
-      // Seed one active loan
-      const loans: Loan[] = [
-           { id: 'L-1001', bookId: '1', memberId: 'MHS2023001', loanDate: new Date().toISOString(), dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), status: 'active' }
-      ];
-      localStorage.setItem(KEYS.LOANS, JSON.stringify(loans));
+  if (!localStorage.getItem(KEYS.EVENTS)) {
+    const events: Event[] = [
+        { id: 'E001', title: 'Ibadah Raya Minggu', date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], time: '09:00', location: 'Gedung Gereja Utama', description: 'Ibadah Raya Minggu Pagi', type: EventType.SERVICE },
+        { id: 'E002', title: 'Persekutuan Pemuda', date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], time: '18:00', location: 'Aula Serbaguna', description: 'Ibadah Kaum Muda', type: EventType.YOUTH },
+    ];
+    localStorage.setItem(KEYS.EVENTS, JSON.stringify(events));
   }
 };
 
 seedData();
 
 export const StorageService = {
-  getBooks: (): Book[] => JSON.parse(localStorage.getItem(KEYS.BOOKS) || '[]'),
-  saveBooks: (books: Book[]) => localStorage.setItem(KEYS.BOOKS, JSON.stringify(books)),
+  getMembers: (): CongregationMember[] => JSON.parse(localStorage.getItem(KEYS.MEMBERS) || '[]'),
+  saveMembers: (members: CongregationMember[]) => localStorage.setItem(KEYS.MEMBERS, JSON.stringify(members)),
 
-  getMembers: (): Member[] => JSON.parse(localStorage.getItem(KEYS.MEMBERS) || '[]'),
-  saveMembers: (members: Member[]) => localStorage.setItem(KEYS.MEMBERS, JSON.stringify(members)),
+  getFinanceRecords: (): FinanceRecord[] => JSON.parse(localStorage.getItem(KEYS.FINANCE) || '[]'),
+  saveFinanceRecords: (records: FinanceRecord[]) => localStorage.setItem(KEYS.FINANCE, JSON.stringify(records)),
 
-  getLoans: (): Loan[] => JSON.parse(localStorage.getItem(KEYS.LOANS) || '[]'),
-  saveLoans: (loans: Loan[]) => localStorage.setItem(KEYS.LOANS, JSON.stringify(loans)),
+  getEvents: (): Event[] => JSON.parse(localStorage.getItem(KEYS.EVENTS) || '[]'),
+  saveEvents: (events: Event[]) => localStorage.setItem(KEYS.EVENTS, JSON.stringify(events)),
 };
